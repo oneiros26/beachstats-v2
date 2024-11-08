@@ -39,6 +39,12 @@ namespace BeachStats
                             }
                         } while (logUsername == "");
 
+                        if (logUsername == "z")
+                        {
+                            LoginAndRegister();
+                            break;
+                        }
+                        
                         expectedUserPath = Directory.GetCurrentDirectory() + "\\" + logUsername;
                         if (!Directory.Exists(expectedUserPath))
                         {
