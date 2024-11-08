@@ -1,2 +1,2 @@
-# beachstats-v2
- C# console application for beach volleyball statistics
+# BeachStats
+C# console application for beach volleyball statistics
