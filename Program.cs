@@ -103,7 +103,7 @@ namespace BeachStats
                 string menuChoice = Console.ReadLine();
                 if (menuChoice == "n")
                 {
-                    Console.WriteLine("Data input coming soon");
+                    NewData();
                     break;
                 }
                 if (menuChoice == "s")
@@ -120,6 +120,132 @@ namespace BeachStats
                 Console.WriteLine("Nebylo vlozeno \"n\" nebo \"s\". Zkuste zaonovu");
             }
         }
+
+        public static void NewData()
+        {
+            bool allSet = false;
+            bool secondGo = false;
+            
+            bool all = false;
+            bool serve = false;
+            bool receive = false;
+            bool setting = false;
+            bool attack = false;
+            do
+            {
+                MakeBox("Zahajili jste NOVY ZAZNAM\nnapiste vsechna cisla podle statistiky kterou chcete delat a stisnete ENTER\n\n1. Vse\n2. Podani\n3. Prijem\n4. Nahra\n5. Utok\n\n Priklod: chcete delat statistiku pro podani a nahru, napisete 24 a stisnete ENTER");
+                string userInput = Console.ReadLine();
+                
+                all = false;
+                serve = false;
+                receive = false;
+                setting = false;
+                attack = false;
+                secondGo = false;
+                
+                foreach (char c in userInput)
+                {
+                    switch (c) 
+                    {
+                        case '1':
+                            all = !all;
+                            break;
+                        case '2':
+                            serve = !serve;
+                            break;
+                        case '3':
+                            receive = !receive;
+                            break;
+                        case '4':
+                            setting = !setting;
+                            break;
+                        case '5':
+                            attack = !attack;
+                            break;        
+                    }
+                }
+
+                if (all || serve || receive || setting || attack == true)
+                {
+                    if (all == true)
+                    {
+                        MakeBox("Byla vybrana moznost VSE\nPro pokracovani stisnete P\nPro vraceni zpet stisnete Z");
+                        while (true)
+                        {
+                            string input = Console.ReadLine();
+                            if (input == "p")
+                            {
+                                allSet = true;
+                                break;
+                            }
+
+                            if (input == "z")
+                            {
+                                secondGo = true;
+                                break;
+                            }
+                        
+                            if (input != "z" && input != "p")
+                            {
+                                MakeBox("Nebylo zadano P nebo Z, zkuste znovu");
+                            }
+                        }
+                    }
+                    else
+                    {
+                        string vybraneMoznosti = "Vybrali jste: ";
+                        if (serve)
+                        {
+                            vybraneMoznosti += "\nPodani";
+                        }
+
+                        if (receive)
+                        {
+                            vybraneMoznosti += "\nPrijem";                        
+                        }
+
+                        if (setting)
+                        {
+                            vybraneMoznosti += "\nNahra";                        
+                        }
+
+                        if (attack)
+                        {
+                            vybraneMoznosti += "\nUtok";                        
+                        }
+                        
+                        MakeBox(vybraneMoznosti + "\n\nPro pokracovani stisnete P\nPro vraceni zpet stisnete Z");
+                        while (true)
+                        {
+                            string input = Console.ReadLine();
+                            if (input == "p")
+                            {
+                                allSet = true;
+                                break;
+                            }
+
+                            if (input == "z")
+                            {
+                                secondGo = true;
+                                break;
+                            }
+                        
+                            if (input != "z" && input != "p")
+                            {
+                                MakeBox("Nebylo zadano P nebo Z, zkuste znovu");
+                            }
+                        }
+                    }
+                }
+
+                if (allSet == false && secondGo == false)
+                {
+                    MakeBox("Nebyla vybrana zadna moznost, zkuste znovu");   
+                }
+                
+            } while (!allSet);
+            
+        }
             
         public static void Main(string[] args)
         {
@@ -132,30 +258,6 @@ namespace BeachStats
         }
     }
 }
-
-/*
-            Console.WriteLine("Registrace nebo Prihlaseni");
-            if (Console.ReadLine() == "r")
-            {
-                Console.WriteLine("What should we call you?");
-                string username = Console.ReadLine();
-                Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + username);
-                Console.WriteLine("User successfully created!");
-            }
-            else
-            {
-                Console.WriteLine("Enter your username:");
-                string username = Console.ReadLine();
-                if (Directory.Exists(Directory.GetCurrentDirectory() + "\\" + username))
-                {
-                    Console.WriteLine("Successfully logged in!");
-                }
-                else
-                {
-                    Console.WriteLine("User does not exist.");
-                }
-            }
-            */
 
 
 /*
