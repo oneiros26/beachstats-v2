@@ -103,7 +103,7 @@ namespace BeachStats
                 string menuChoice = Console.ReadLine();
                 if (menuChoice == "n")
                 {
-                    NewData();
+                    WhatWillUserRecord();
                     break;
                 }
                 if (menuChoice == "s")
@@ -121,7 +121,7 @@ namespace BeachStats
             }
         }
 
-        public static void NewData()
+        public static void WhatWillUserRecord()
         {
             bool allSet = false;
             bool secondGo = false;
@@ -244,32 +244,36 @@ namespace BeachStats
                 }
                 
             } while (!allSet);
-            
+            NewData(all, serve, receive, setting, attack);
         }
-            
+
+        public static void NewData(bool all, bool serve, bool receive, bool setting, bool attack)
+        {
+            MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu yyyymmdd\nPriklad: datum 26.9.1994, napiste: 19940926");
+            string matchDate = Console.ReadLine();
+            MakeBox("Zadejte název zápasu a stiskněte ENTER");
+            string matchName = Console.ReadLine();
+            File.WriteAllText(matchName + ".txt", matchDate + "\n");
+            if (all == true)
+            {
+                // to do
+            }
+            else
+            {
+                // to do
+            }
+        }
         public static void Main(string[] args)
         {
-            // WelcomeMessage();
-            // LoginAndRegister();
+            // WelcomeMessage(); // Line 8
+            // LoginAndRegister(); // Line 18
+            /*
             while (true)
             {
-                Menu();
+                Menu(); // Line 97
             }
+            */
+            Menu();
         }
     }
 }
-
-
-/*
-string dataToSave = "Imagine if this worked?";
-string username = Console.ReadLine();
-string filePath = username + ".txt";
-
-File.WriteAllText(filePath, dataToSave);
-
-string filePath = "testFile.txt";
-string data = File.ReadAllText(filePath);
-Console.WriteLine(data);
-
-Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\directory");
-*/
