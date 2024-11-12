@@ -3,8 +3,16 @@ using System.Reflection;
 
 namespace BeachStats
 {
+    public enum ServiceTurn
+    {
+        Me,
+        Enemy1,
+        Teamate,
+        Enemy2
+    }
     class Program
     {
+        public static string username;
         public static void WelcomeMessage()
         {
             string welcome = "Vitejte v aplikaci BeachStats!";
@@ -17,14 +25,14 @@ namespace BeachStats
 
         public static void LoginAndRegister()
         {
+            ConsoleKeyInfo keyPress = Console.ReadKey();
+            MakeBox("Stisknete “P” pro přihlášení nebo “R” pro registraci");
             while (true)
             {
-                MakeBox("napište “p” pro přihlášení nebo “r” pro registraci\nstiskněte ENTER pro potvrzení");
 
-                string logOrReg = Console.ReadLine();
-                if (logOrReg == "p")
+                if (keyPress.Key == ConsoleKey.S)
                 {
-                    MakeBox("Zahajili jste PRIHLASENI\nnapiste jmeno hrace pro ktereho chcete statistiku tvorit\nstisknete ENTER pro potvrzeni");
+                    MakeBox("Zahajili jste PRIHLASENI\nnapiste jmeno hrace pro ktereho chcete statistiku tvorit");
                     string expectedUserPath;
                     
                     do
@@ -50,14 +58,17 @@ namespace BeachStats
                         {
                             MakeBox("Uzivatel na vasem zarizeni neexistuje\nZkuste znovu");
                         }
-
+                        else
+                        {
+                            username = logUsername;
+                        }
                     } while (!Directory.Exists(expectedUserPath));
                     
                     MakeBox("Prihlaseni probehlo uspesne!");
                     break;
                 }
 
-                if (logOrReg == "r")
+                if (keyPress.Key == ConsoleKey.R)
                 {
                     MakeBox("Zahajili jste REGISTRACI\nnapiste jmeno hrace pro ktereho chcete statistiku tvorit\nstisknete ENTER pro potvrzeni");
                     string regUsername;
@@ -68,6 +79,10 @@ namespace BeachStats
                         {
                             MakeBox("Nebylo zadano zadne jmeno, zkuste znovu");
                         }
+                        else
+                        {
+                            username = regUsername;
+                        }
                     } while (regUsername == "");
                     
                     Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + regUsername);
@@ -75,7 +90,6 @@ namespace BeachStats
                     
                     break;
                 }
-                MakeBox("Nebylo vlozeno \"r\" nebo \"p\". Zkuste znovu");
             }
         }
         public static void MakeBox(string s)
@@ -96,28 +110,26 @@ namespace BeachStats
 
         public static void Menu()
         {
+            ConsoleKeyInfo keyPress = Console.ReadKey();
             while (true)
             {
-                MakeBox("napište \"n\" pro nový záznam a stiskněte ENTER\nnapište \"s\" pro statistiky a stiskněte ENTER\n\nstisknutím “z” se vrátíte zpět");
-
-                string menuChoice = Console.ReadLine();
-                if (menuChoice == "n")
+                MakeBox("Stisknete \"N\" pro nový záznam nebo \"S\" pro statistiky\n\nstisknutím “Z” se vrátíte zpět");
+                
+                if (keyPress.Key == ConsoleKey.N)
                 {
                     WhatWillUserRecord();
                     break;
                 }
-                if (menuChoice == "s")
+                if (keyPress.Key == ConsoleKey.S)
                 {
                     Console.WriteLine("Statistics coming soon");
                     break;
                 }
-                if (menuChoice == "z")
+                if (keyPress.Key == ConsoleKey.Z)
                 {
                     LoginAndRegister();
                     break;
                 }
-
-                Console.WriteLine("Nebylo vlozeno \"n\" nebo \"s\". Zkuste zaonovu");
             }
         }
 
@@ -247,33 +259,82 @@ namespace BeachStats
             NewData(all, serve, receive, setting, attack);
         }
 
+        public static void MoveServer(ref ServiceTurn s)
+        {
+            if (s == ServiceTurn.Me)
+            {
+                s = ServiceTurn.Enemy1;
+                return;
+            }
+            if (s == ServiceTurn.Enemy1)
+            {
+                s = ServiceTurn.Teamate;
+                return;
+            }
+            if (s == ServiceTurn.Teamate)
+            {
+                s = ServiceTurn.Enemy2;
+                return;
+            }
+            if (s == ServiceTurn.Enemy2)
+            {
+                s = ServiceTurn.Me;
+            }
+        }
+
         public static void NewData(bool all, bool serve, bool receive, bool setting, bool attack)
         {
+            ConsoleKeyInfo keyPress = Console.ReadKey();
+            ServiceTurn serviceTurn;
+            
             MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu yyyymmdd\nPriklad: datum 26.9.1994, napiste: 19940926");
             string matchDate = Console.ReadLine();
             MakeBox("Zadejte název zápasu a stiskněte ENTER");
             string matchName = Console.ReadLine();
-            File.WriteAllText(matchName + ".txt", matchDate + "\n");
+            File.WriteAllText(username + "/" + matchName + ".txt", matchDate + "\n");
             if (all == true)
             {
-                // to do
+                // NOT FINISHED
+                
+                MakeBox("Podava vas tym nebo druhy tym? Stisknete M pro my nebo P pro protihraci");
+                if (keyPress.Key == ConsoleKey.M)
+                {
+                    MakeBox("Skoro hotovo! Kdo z vaseho tymu podava? Stisknete J pro ja nebo S pro spoluhrac");
+                    if (keyPress.Key == ConsoleKey.J)
+                    {
+                        serviceTurn = ServiceTurn.Me;
+                    }
+
+                    if (keyPress.Key == ConsoleKey.S)
+                    {
+                        serviceTurn = ServiceTurn.Teamate;
+                    }
+                }
+                if (keyPress.Key == ConsoleKey.P)
+                {
+                    MakeBox("Skoro hotovo! Kdo z vaseho tymu podava po protihracich? Stisknete J pro ja nebo S pro spoluhrac");
+                    if (keyPress.Key == ConsoleKey.J)
+                    {
+                        serviceTurn = ServiceTurn.Enemy2;
+                    }
+
+                    if (keyPress.Key == ConsoleKey.S)
+                    {
+                        serviceTurn = ServiceTurn.Enemy1;
+                    }
+                }
+                
             }
             else
             {
-                // to do
+                
             }
         }
         public static void Main(string[] args)
         {
-            // WelcomeMessage(); // Line 8
-            // LoginAndRegister(); // Line 18
-            /*
-            while (true)
-            {
-                Menu(); // Line 97
-            }
-            */
-            Menu();
+            WelcomeMessage(); // Line 8
+            LoginAndRegister(); // Line 18
+            Menu(); // Line 97
         }
     }
 }
