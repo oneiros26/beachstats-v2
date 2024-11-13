@@ -220,7 +220,7 @@ namespace BeachStats
 
     class Program
     {
-        public static string username = "Vitek Sobisek"; // Karch Kiraly
+        public static string username = "Karch Kiraly";
         public static string manual = File.ReadAllText("manual.txt");
         public static ServeStatistics statisticsSe = new ServeStatistics();
         public static ReceiveStatistics statisticsRe = new ReceiveStatistics();
@@ -334,7 +334,7 @@ namespace BeachStats
                 }
                 if (keyPress.Key == ConsoleKey.S)
                 {
-                    Console.WriteLine("Statistics coming soon");
+                    // To-do
                     break;
                 }
                 if (keyPress.Key == ConsoleKey.Z)
@@ -435,7 +435,7 @@ namespace BeachStats
                         EnterReceiveStats(normalOrientation);
                         break;
                     case ConsoleKey.U:
-                        // Metoda
+                        EnterAttackStats(normalOrientation);
                         break;
                     case ConsoleKey.H:
                         MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat\n" + serveText + receiveText + attackText + manual);
@@ -678,6 +678,11 @@ namespace BeachStats
             }
             statisticsRe.RecordReceive(position, outcome);
         }
+
+        public static void EnterAttackStats(bool normalOrientation)
+        {
+            // To-do
+        }
     
         public static void Main(string[] args)
         {
@@ -685,7 +690,7 @@ namespace BeachStats
             // LoginAndRegister(); // Line 18
             Menu(); // Line 97
             // statisticsSe.DisplayStatistics(); // Debugging
-            statisticsRe.DisplayStatistics(); // Debugging
+            // statisticsRe.DisplayStatistics(); // Debugging
         }
     }
 }
