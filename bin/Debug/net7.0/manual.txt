@@ -1,0 +1,90 @@
+
+
+Vsechny statistiky se ovladaji pomoci numpadu.
+
+1) KDE STOJI HRAC PRI PODANI NEBO UTOKU - jednoduse pomoci numpadovych klaves 1, 2, a 3
+     _______________________
+    |       |       |       |
+    |       |       |       |
+    |_______|_______|_______|
+    |       |       |       |
+    |       |       |       |
+    |_______|_______|_______|
+ ______________________________ ZDE JE SIT
+     _______________________
+    |       |       |       |
+    |       |       |       |
+    |_______|_______|_______|
+    |       |       |       |
+    |       |       |       |
+  __|_______|_______|_______|__ ZDE JE ZADNI LAJNA
+    |       |       |       |
+    |   1   |   2   |   3   |
+    |_______|_______|_______|
+
+2) MISTO DOPADU SERVISU NEBO UTOKU - pomoci numpadovych klaves 4, 5, 6, 7, 8 a 9
+4 = Vlevo vpredu
+5 = Uprostred vpredu
+6 = Vpravo vpredu
+7 = Vlevo vzadu
+8 = Uprostred vzadu
+9 = Vpravo vzadu
+     _______________________
+    |       |       |       |
+    |   7   |   8   |   9   |
+    |_______|_______|_______|
+    |       |       |       |
+    |   4   |   5   |   6   |
+    |_______|_______|_______|
+ ______________________________ ZDE JE SIT
+     _______________________
+    |       |       |       |
+    |       |       |       |
+    |_______|_______|_______|
+    |       |       |       |
+    |       |       |       |
+    |_______|_______|_______|
+
+!!! CO DELAT KDYZ SE OTOCI STRANY !!!
+Nic si v hlave otacet nemusite, pouze se posune numpad
+Ukazka:
+     _______________________
+    |       |       |       |
+    |   1   |   2   |   3   |
+  __|_______|_______|_______|__ ZDE JE ZADNI LAJNA
+    |       |       |       |
+    |       |       |       |
+    |_______|_______|_______|
+    |       |       |       |
+    |       |       |       |
+    |_______|_______|_______|
+ ______________________________ ZDE JE SIT
+     _______________________
+    |       |       |       |
+    |   7   |   8   |   9   |
+    |_______|_______|_______|
+    |       |       |       |
+    |   4   |   5   |   6   |
+    |_______|_______|_______|
+
+3) HODNOCENI PODANI - pomoci numpadovych klaves 0, 1, 2 a 3
+3 = Eso
+2 = Tezky servis (mic je ve hre, ale maji problemi)
+1 = Normal (normalni prijem)
+0 = Zkazene podani
+
+4) HODNOCENI PRIJMU - opet pomoci numpadovych klaves 0, 1, 2 a 3
+3 = Nejlepsi (lze nahrat v klidu prstama)
+2 = Dobry (nahravac uz musi bezet)
+1 = Spatny (nahravac uz pouze spravuje, neda se dat hezka nahra)
+0 = Dostal eso
+
+5) TYP UTOKU - pomoci pismen L a S
+L = Lob (kopecek)
+S = Smec (tvrdy uder)
+
+6) HODNOCENI UTOKU - pomoci numpadovych klaves 0, 1, 2 a 3
+3 = Nejlepsi (rovnou na zem / polar odpalil mic pryc)
+2 = Dobry (polar jen tak tak zvedl uder, vraci mic zadarmo zpet)
+1 = Spatny (polar capl tak ze muze utocit zpet)
+0 = Nejhorsi (primi bod pro soupere - utok do autu / dotek site / utok do bloku) 
