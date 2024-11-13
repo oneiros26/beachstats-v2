@@ -1,5 +1,8 @@
-﻿using System.IO;
-using System.Reflection;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Threading;
+
 
 namespace BeachStats
 {
@@ -72,7 +75,7 @@ namespace BeachStats
         public void RecordServe(int startPosition, int endPosition, string outcome)
         {
             ServeType serveType = GetServeType(startPosition, endPosition);
-            Console.WriteLine($"Recording serve: Start={startPosition}, End={endPosition}, Outcome={outcome}");
+            // Console.WriteLine($"Recording serve: Start={startPosition}, End={endPosition}, Outcome={outcome}"); // Debugging
 
             if (serveType != null)
             {
@@ -107,12 +110,121 @@ namespace BeachStats
         */
         
     }
+    
+     public class ReceiveType
+    {
+        public int position { get; }
+
+        public int greatCount { get; private set; }
+        public int goodCount { get; private set; }
+        public int badCount { get; private set; }
+        public int failCount { get; private set; }
+        
+        public ReceiveType(int _position)
+        {
+            position = _position;
+        }
+        
+        public void RecordGreat()
+        {
+            greatCount++;
+        }
+
+        public void RecordGood()
+        {
+            goodCount++;
+        }
+
+        public void RecordBad()
+        {
+            badCount++;
+        }
+        
+        public void RecordFail()
+        {
+            failCount++;
+        }
+        
+        public override string ToString()
+        {
+            return $"Prijem {position}: Skvely = {greatCount}, Dobry={goodCount}, Spatny={badCount}, Chyby={failCount}";
+        }
+    }
+    
+    public class ReceiveStatistics
+    {
+        private Dictionary<string, ReceiveType> receiveTypes;
+
+        public ReceiveStatistics()
+        {
+            receiveTypes = new Dictionary<string, ReceiveType>();
+            
+            for (int position = 1; position <= 9; position++)
+            {
+                if (position == 5)
+                {
+                    
+                }
+                else
+                {
+                    string key = $"{position}";
+                    receiveTypes[key] = new ReceiveType(position);   
+                }
+            }
+        }
+        
+        public ReceiveType GetReceiveType(int position)
+        {
+            string key = $"{position}";
+            return receiveTypes.ContainsKey(key) ? receiveTypes[key] : null;
+        }
+        
+        public void RecordReceive(int position,  string outcome)
+        {
+            ReceiveType receiveType = GetReceiveType(position);
+            Console.WriteLine($"Recording receive: Position = {position}, Outcome={outcome}");
+
+            if (receiveType != null)
+            {
+                if (outcome.Equals("3"))
+                {
+                    receiveType.RecordGreat();
+                }
+                else if (outcome.Equals("2"))
+                {
+                    receiveType.RecordGood();
+                }
+                else if (outcome.Equals("1"))
+                {
+                    receiveType.RecordBad();
+                }
+                else if (outcome.Equals("0"))
+                {
+                    receiveType.RecordFail();
+                }
+            }
+        }
+        
+        // For debugging only
+        
+        public void DisplayStatistics()
+        {
+            foreach (var receiveType in receiveTypes.Values)
+            {
+                Console.WriteLine(receiveType);
+            }
+        }
+        
+        
+    }
 
     class Program
     {
         public static string username = "Vitek Sobisek"; // Karch Kiraly
         public static string manual = File.ReadAllText("manual.txt");
-        public static ServeStatistics statistics = new ServeStatistics();
+        public static ServeStatistics statisticsSe = new ServeStatistics();
+        public static ReceiveStatistics statisticsRe = new ReceiveStatistics();
+
         public static void WelcomeMessage()
         {
             string welcome = "Vitejte v aplikaci BeachStats!";
@@ -320,7 +432,7 @@ namespace BeachStats
                         EnterServeStats(normalOrientation);
                         break;
                     case ConsoleKey.P:
-                        // Metoda
+                        EnterReceiveStats(normalOrientation);
                         break;
                     case ConsoleKey.U:
                         // Metoda
@@ -454,16 +566,126 @@ namespace BeachStats
                     outcome = "3";
                     break;
             }
-            statistics.RecordServe(startPosition, endPosition, outcome);
+            statisticsSe.RecordServe(startPosition, endPosition, outcome);
         }
 
-        
+        public static void EnterReceiveStats(bool normalOrientation)
+        {
+            int position = 0;
+            string outcome = "";
+            
+            MakeBox("Kde prijima?");
+            ConsoleKeyInfo keyPress = Console.ReadKey();
+            switch (keyPress.KeyChar)
+            {
+                case '1':
+                    if (normalOrientation == false)
+                    {
+                        position = 9;
+                    }
+                    else
+                    {
+                        position = 1;
+                    }
+                    break;
+                case '2':
+                    if (normalOrientation == false)
+                    {
+                        position = 8;
+                    }
+                    else
+                    {
+                        position = 2;
+                    }
+                    break;
+                case '3':
+                    if (normalOrientation == false)
+                    {
+                        position = 7;
+                    }
+                    else
+                    {
+                        position = 3;
+                    }
+                    break;
+                case '4':
+                    if (normalOrientation == false)
+                    {
+                        position = 6;
+                    }
+                    else
+                    {
+                        position = 4;
+                    }
+                    break;
+                case '6':
+                    if (normalOrientation == false)
+                    {
+                        position = 4;
+                    }
+                    else
+                    {
+                        position = 6;
+                    }
+                    break;
+                case '7':
+                    if (normalOrientation == false)
+                    {
+                        position = 3;
+                    }
+                    else
+                    {
+                        position = 7;
+                    }
+                    break;
+                case '8':
+                    if (normalOrientation == false)
+                    {
+                        position = 2;
+                    }
+                    else
+                    {
+                        position = 8;
+                    }
+                    break;
+                case '9':
+                    if (normalOrientation == false)
+                    {
+                        position = 1;
+                    }
+                    else
+                    {
+                        position = 9;
+                    }
+                    break;
+            }
+            MakeBox("Jak prijem dopadl?");
+            ConsoleKeyInfo keyPress2 = Console.ReadKey();
+            switch (keyPress2.KeyChar)
+            {
+                case '0':
+                    outcome = "0";
+                    break;
+                case '1':
+                    outcome = "1";
+                    break;
+                case '2':
+                    outcome = "2";
+                    break;
+                case '3':
+                    outcome = "3";
+                    break;
+            }
+            statisticsRe.RecordReceive(position, outcome);
+        }
+    
         public static void Main(string[] args)
         {
             // WelcomeMessage(); // Line 8
             // LoginAndRegister(); // Line 18
             Menu(); // Line 97
-            // statistics.DisplayStatistics(); // Debugging
+            // statisticsSe.DisplayStatistics(); // Debugging
+            statisticsRe.DisplayStatistics(); // Debugging
         }
     }
 }
