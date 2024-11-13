@@ -3,13 +3,6 @@ using System.Reflection;
 
 namespace BeachStats
 {
-    public enum ServiceTurn
-    {
-        Me,
-        Enemy1,
-        Teamate,
-        Enemy2
-    }
     class Program
     {
         public static string username;
@@ -136,204 +129,55 @@ namespace BeachStats
         public static void WhatWillUserRecord()
         {
             bool allSet = false;
-            bool secondGo = false;
-            
-            bool all = false;
             bool serve = false;
             bool receive = false;
             bool setting = false;
             bool attack = false;
+            
             do
             {
-                MakeBox("Zahajili jste NOVY ZAZNAM\nnapiste vsechna cisla podle statistiky kterou chcete delat a stisnete ENTER\n\n1. Vse\n2. Podani\n3. Prijem\n4. Nahra\n5. Utok\n\n Priklod: chcete delat statistiku pro podani a nahru, napisete 24 a stisnete ENTER");
-                string userInput = Console.ReadLine();
+                MakeBox("Zahajili jste NOVY ZAZNAM\nstisknete vsechna cisla pro ktere chcete udelat statistiku\n\n1. Podani - " + serve.ToString() + "\n2. Prijem - " + receive.ToString() + "\n3. Nahra - " + setting.ToString() + "\n4. Utok - " + attack.ToString() + "\n\nAz budete spokojeni stisknete ENTER");
+                ConsoleKeyInfo keyPress = Console.ReadKey();
                 
-                all = false;
-                serve = false;
-                receive = false;
-                setting = false;
-                attack = false;
-                secondGo = false;
-                
-                foreach (char c in userInput)
+                switch (keyPress.KeyChar) 
                 {
-                    switch (c) 
-                    {
                         case '1':
-                            all = !all;
-                            break;
-                        case '2':
                             serve = !serve;
                             break;
-                        case '3':
+                        case '2':
                             receive = !receive;
                             break;
-                        case '4':
+                        case '3':
                             setting = !setting;
                             break;
-                        case '5':
+                        case '4':
                             attack = !attack;
-                            break;        
-                    }
+                            break;
                 }
-
-                if (all || serve || receive || setting || attack == true)
+                if (keyPress.Key == ConsoleKey.Enter)
                 {
-                    if (all == true)
-                    {
-                        MakeBox("Byla vybrana moznost VSE\nPro pokracovani stisnete P\nPro vraceni zpet stisnete Z");
-                        while (true)
-                        {
-                            string input = Console.ReadLine();
-                            if (input == "p")
-                            {
-                                allSet = true;
-                                break;
-                            }
-
-                            if (input == "z")
-                            {
-                                secondGo = true;
-                                break;
-                            }
-                        
-                            if (input != "z" && input != "p")
-                            {
-                                MakeBox("Nebylo zadano P nebo Z, zkuste znovu");
-                            }
-                        }
-                    }
-                    else
-                    {
-                        string vybraneMoznosti = "Vybrali jste: ";
-                        if (serve)
-                        {
-                            vybraneMoznosti += "\nPodani";
-                        }
-
-                        if (receive)
-                        {
-                            vybraneMoznosti += "\nPrijem";                        
-                        }
-
-                        if (setting)
-                        {
-                            vybraneMoznosti += "\nNahra";                        
-                        }
-
-                        if (attack)
-                        {
-                            vybraneMoznosti += "\nUtok";                        
-                        }
-                        
-                        MakeBox(vybraneMoznosti + "\n\nPro pokracovani stisnete P\nPro vraceni zpet stisnete Z");
-                        while (true)
-                        {
-                            string input = Console.ReadLine();
-                            if (input == "p")
-                            {
-                                allSet = true;
-                                break;
-                            }
-
-                            if (input == "z")
-                            {
-                                secondGo = true;
-                                break;
-                            }
-                        
-                            if (input != "z" && input != "p")
-                            {
-                                MakeBox("Nebylo zadano P nebo Z, zkuste znovu");
-                            }
-                        }
-                    }
+                    allSet = true;
                 }
 
-                if (allSet == false && secondGo == false)
-                {
-                    MakeBox("Nebyla vybrana zadna moznost, zkuste znovu");   
-                }
-                
             } while (!allSet);
-            NewData(all, serve, receive, setting, attack);
+            NewData(serve, receive, setting, attack);
         }
-
-        public static void MoveServer(ref ServiceTurn s)
+        
+        public static void NewData(bool serve, bool receive, bool setting, bool attack)
         {
-            if (s == ServiceTurn.Me)
-            {
-                s = ServiceTurn.Enemy1;
-                return;
-            }
-            if (s == ServiceTurn.Enemy1)
-            {
-                s = ServiceTurn.Teamate;
-                return;
-            }
-            if (s == ServiceTurn.Teamate)
-            {
-                s = ServiceTurn.Enemy2;
-                return;
-            }
-            if (s == ServiceTurn.Enemy2)
-            {
-                s = ServiceTurn.Me;
-            }
-        }
-
-        public static void NewData(bool all, bool serve, bool receive, bool setting, bool attack)
-        {
-            ConsoleKeyInfo keyPress = Console.ReadKey();
-            ServiceTurn serviceTurn;
-            
             MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu yyyymmdd\nPriklad: datum 26.9.1994, napiste: 19940926");
             string matchDate = Console.ReadLine();
+            
             MakeBox("Zadejte název zápasu a stiskněte ENTER");
             string matchName = Console.ReadLine();
             File.WriteAllText(username + "/" + matchName + ".txt", matchDate + "\n");
-            if (all == true)
-            {
-                // NOT FINISHED
-                
-                MakeBox("Podava vas tym nebo druhy tym? Stisknete M pro my nebo P pro protihraci");
-                if (keyPress.Key == ConsoleKey.M)
-                {
-                    MakeBox("Skoro hotovo! Kdo z vaseho tymu podava? Stisknete J pro ja nebo S pro spoluhrac");
-                    if (keyPress.Key == ConsoleKey.J)
-                    {
-                        serviceTurn = ServiceTurn.Me;
-                    }
-
-                    if (keyPress.Key == ConsoleKey.S)
-                    {
-                        serviceTurn = ServiceTurn.Teamate;
-                    }
-                }
-                if (keyPress.Key == ConsoleKey.P)
-                {
-                    MakeBox("Skoro hotovo! Kdo z vaseho tymu podava po protihracich? Stisknete J pro ja nebo S pro spoluhrac");
-                    if (keyPress.Key == ConsoleKey.J)
-                    {
-                        serviceTurn = ServiceTurn.Enemy2;
-                    }
-
-                    if (keyPress.Key == ConsoleKey.S)
-                    {
-                        serviceTurn = ServiceTurn.Enemy1;
-                    }
-                }
-                
-            }
-            else
-            {
-                
-            }
+            
+            ConsoleKeyInfo keyPress = Console.ReadKey();
         }
         public static void Main(string[] args)
         {
-            WelcomeMessage(); // Line 8
-            LoginAndRegister(); // Line 18
+            //WelcomeMessage(); // Line 8
+            //LoginAndRegister(); // Line 18
             Menu(); // Line 97
         }
     }
