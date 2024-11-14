@@ -1,67 +1,61 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Threading;
-
-
-namespace BeachStats
+﻿namespace BeachStats
 {
     public class ServeType
     {
-        public int startPosition { get; }
-        public int endPosition { get; }
+        public int StartPosition { get; }
+        public int EndPosition { get; }
 
-        public int aceCount { get; private set; }
-        public int goodCount { get; private set; }
-        public int badCount { get; private set; }
-        public int mistakeCount { get; private set; }
+        public int AceCount { get; private set; }
+        public int GoodCount { get; private set; }
+        public int BadCount { get; private set; }
+        public int MistakeCount { get; private set; }
         
-        public ServeType(int _startPosition, int _endPosition)
+        public ServeType(int startPosition, int endPosition)
         {
-            startPosition = _startPosition;
-            endPosition = _endPosition;
+            StartPosition = startPosition;
+            EndPosition = endPosition;
         }
         
         public void RecordAce()
         {
-            aceCount++;
+            AceCount++;
         }
 
         public void RecordGood()
         {
-            goodCount++;
+            GoodCount++;
         }
 
         public void RecordBad()
         {
-            badCount++;
+            BadCount++;
         }
         
         public void RecordMistake()
         {
-            mistakeCount++;
+            MistakeCount++;
         }
         
         public override string ToString()
         {
-            return $"Servis {startPosition}->{endPosition}: Eso = {aceCount}, Dobry={goodCount}, Spatny={badCount}, Chyby={mistakeCount}";
+            return $"Servis {StartPosition}->{EndPosition}: Eso = {AceCount}, Dobry={GoodCount}, Spatny={BadCount}, Chyby={MistakeCount}";
         }
     }
     
     public class ServeStatistics
     {
-        private Dictionary<string, ServeType> serveTypes;
+        private Dictionary<string, ServeType> _serveTypes;
 
         public ServeStatistics()
         {
-            serveTypes = new Dictionary<string, ServeType>();
+            _serveTypes = new Dictionary<string, ServeType>();
             
             for (int start = 1; start <= 3; start++)
             {
                 for (int end = 1; end <= 6; end++)
                 {
                     string key = $"{start}-{end}";
-                    serveTypes[key] = new ServeType(start, end);
+                    _serveTypes[key] = new ServeType(start, end);
                 }
             }
         }
@@ -69,7 +63,9 @@ namespace BeachStats
         public ServeType GetServeType(int start, int end)
         {
             string key = $"{start}-{end}";
-            return serveTypes.ContainsKey(key) ? serveTypes[key] : null;
+            _serveTypes.TryGetValue(key, out ServeType serveType);
+            return serveType;
+
         }
         
         public void RecordServe(int startPosition, int endPosition, string outcome)
@@ -102,7 +98,7 @@ namespace BeachStats
         /*
         public void DisplayStatistics()
         {
-            foreach (var serveType in serveTypes.Values)
+            foreach (var serveType in _serveTypes.Values)
             {
                 Console.WriteLine(serveType);
             }
@@ -113,51 +109,51 @@ namespace BeachStats
     
      public class ReceiveType
     {
-        public int position { get; }
+        public int Position { get; }
 
-        public int greatCount { get; private set; }
-        public int goodCount { get; private set; }
-        public int badCount { get; private set; }
-        public int failCount { get; private set; }
+        public int GreatCount { get; private set; }
+        public int GoodCount { get; private set; }
+        public int BadCount { get; private set; }
+        public int FailCount { get; private set; }
         
-        public ReceiveType(int _position)
+        public ReceiveType(int position)
         {
-            position = _position;
+            Position = position;
         }
         
         public void RecordGreat()
         {
-            greatCount++;
+            GreatCount++;
         }
 
         public void RecordGood()
         {
-            goodCount++;
+            GoodCount++;
         }
 
         public void RecordBad()
         {
-            badCount++;
+            BadCount++;
         }
         
         public void RecordFail()
         {
-            failCount++;
+            FailCount++;
         }
         
         public override string ToString()
         {
-            return $"Prijem {position}: Skvely = {greatCount}, Dobry={goodCount}, Spatny={badCount}, Chyby={failCount}";
+            return $"Prijem {Position}: Skvely = {GreatCount}, Dobry={GoodCount}, Spatny={BadCount}, Chyby={FailCount}";
         }
     }
     
     public class ReceiveStatistics
     {
-        private Dictionary<string, ReceiveType> receiveTypes;
+        private Dictionary<string, ReceiveType> _receiveTypes;
 
         public ReceiveStatistics()
         {
-            receiveTypes = new Dictionary<string, ReceiveType>();
+            _receiveTypes = new Dictionary<string, ReceiveType>();
             
             for (int position = 1; position <= 9; position++)
             {
@@ -168,7 +164,7 @@ namespace BeachStats
                 else
                 {
                     string key = $"{position}";
-                    receiveTypes[key] = new ReceiveType(position);   
+                    _receiveTypes[key] = new ReceiveType(position);   
                 }
             }
         }
@@ -176,7 +172,9 @@ namespace BeachStats
         public ReceiveType GetReceiveType(int position)
         {
             string key = $"{position}";
-            return receiveTypes.ContainsKey(key) ? receiveTypes[key] : null;
+            _receiveTypes.TryGetValue(key, out ReceiveType receiveType);
+            return receiveType;
+
         }
         
         public void RecordReceive(int position,  string outcome)
@@ -206,24 +204,24 @@ namespace BeachStats
         }
         
         // For debugging only
-        
+        /*
         public void DisplayStatistics()
         {
-            foreach (var receiveType in receiveTypes.Values)
+            foreach (var receiveType in _receiveTypes.Values)
             {
                 Console.WriteLine(receiveType);
             }
         }
-        
+        */
         
     }
 
     class Program
     {
-        public static string username = "Karch Kiraly";
-        public static string manual = File.ReadAllText("manual.txt");
-        public static ServeStatistics statisticsSe = new ServeStatistics();
-        public static ReceiveStatistics statisticsRe = new ReceiveStatistics();
+        public static string Username = "Karch Kiraly";
+        public static string Manual = File.ReadAllText("manual.txt");
+        public static ServeStatistics StatisticsSe = new ServeStatistics();
+        public static ReceiveStatistics StatisticsRe = new ReceiveStatistics();
 
         public static void WelcomeMessage()
         {
@@ -272,7 +270,7 @@ namespace BeachStats
                         }
                         else
                         {
-                            username = logUsername;
+                            Username = logUsername;
                         }
                     } while (!Directory.Exists(expectedUserPath));
                     
@@ -293,7 +291,7 @@ namespace BeachStats
                         }
                         else
                         {
-                            username = regUsername;
+                            Username = regUsername;
                         }
                     } while (regUsername == "");
                     
@@ -385,7 +383,7 @@ namespace BeachStats
             
             MakeBox("Zadejte název zápasu a stiskněte ENTER");
             string matchName = Console.ReadLine();
-            File.WriteAllText(username + "/" + matchName + ".txt", matchDate + "\n");
+            File.WriteAllText(Username + "/" + matchName + ".txt", matchDate + "\n");
             
             bool normalOrientation = true;
             MakeBox("Zacina vas tym na blizsi nebo vzdalenejsi strane? Stisknete B pro blizsi nebo V pro vzdalenejsi");
@@ -409,15 +407,15 @@ namespace BeachStats
             string attackText = "";
             bool exitNow = false;
             
-            if (serve == true)
+            if (serve)
             {
                 serveText = "\nS - servis";
             }
-            if (receive == true)
+            if (receive)
             {
                 receiveText = "\nP - prijem";
             }
-            if (attack == true)
+            if (attack)
             {
                 attackText = "\nU - utok";
             }
@@ -438,7 +436,7 @@ namespace BeachStats
                         EnterAttackStats(normalOrientation);
                         break;
                     case ConsoleKey.H:
-                        MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat\n" + serveText + receiveText + attackText + manual);
+                        MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat\n" + serveText + receiveText + attackText + Manual);
                         break;
                     case ConsoleKey.Enter:
                         exitNow = true;
@@ -566,7 +564,7 @@ namespace BeachStats
                     outcome = "3";
                     break;
             }
-            statisticsSe.RecordServe(startPosition, endPosition, outcome);
+            StatisticsSe.RecordServe(startPosition, endPosition, outcome);
         }
 
         public static void EnterReceiveStats(bool normalOrientation)
@@ -676,7 +674,7 @@ namespace BeachStats
                     outcome = "3";
                     break;
             }
-            statisticsRe.RecordReceive(position, outcome);
+            StatisticsRe.RecordReceive(position, outcome);
         }
 
         public static void EnterAttackStats(bool normalOrientation)
@@ -689,8 +687,8 @@ namespace BeachStats
             // WelcomeMessage(); // Line 8
             // LoginAndRegister(); // Line 18
             Menu(); // Line 97
-            // statisticsSe.DisplayStatistics(); // Debugging
-            // statisticsRe.DisplayStatistics(); // Debugging
+            // StatisticsSe.DisplayStatistics(); // Debugging
+            // StatisticsRe.DisplayStatistics(); // Debugging
         }
     }
 }
