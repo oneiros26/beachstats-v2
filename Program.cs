@@ -1,5 +1,13 @@
 ﻿namespace BeachStats
 {
+    public static class GlobalVariables
+    {
+        public static string Username = "Karch Kiraly";
+        public static string Manual = File.ReadAllText("manual.txt");
+        public static ServeStatistics StatisticsSe = new ServeStatistics();
+        public static ReceiveStatistics StatisticsRe = new ReceiveStatistics();
+    }
+    
     public class ServeType
     {
         public int StartPosition { get; }
@@ -9,6 +17,7 @@
         public int GoodCount { get; private set; }
         public int BadCount { get; private set; }
         public int MistakeCount { get; private set; }
+        public int Score { get; private set; }
         
         public ServeType(int startPosition, int endPosition)
         {
@@ -19,21 +28,25 @@
         public void RecordAce()
         {
             AceCount++;
+            Score = Score + 2;
         }
 
         public void RecordGood()
         {
             GoodCount++;
+            Score = Score + 1;
         }
 
         public void RecordBad()
         {
             BadCount++;
+            Score = Score - 1;
         }
         
         public void RecordMistake()
         {
             MistakeCount++;
+            Score = Score - 2;
         }
         
         public override string ToString()
@@ -72,30 +85,48 @@
         {
             ServeType serveType = GetServeType(startPosition, endPosition);
             // Console.WriteLine($"Recording serve: Start={startPosition}, End={endPosition}, Outcome={outcome}"); // Debugging
-
-            if (serveType != null)
+            
+            switch (outcome)
             {
-                if (outcome.Equals("3"))
-                {
+                case "3":
                     serveType.RecordAce();
-                }
-                else if (outcome.Equals("2"))
-                {
+                    break;
+                case "2":
                     serveType.RecordGood();
-                }
-                else if (outcome.Equals("1"))
-                {
+                    break;
+                case "1":
                     serveType.RecordBad();
-                }
-                else if (outcome.Equals("0"))
-                {
+                    break;
+                case "0":
                     serveType.RecordMistake();
+                    break;
+            }
+        }
+
+        public string[] ServeAnalysis()
+        {
+            string[] serveAnalysisArr = new string[2];
+            ServeType bestServe = GetServeType(1, 4);
+            ServeType worstServe = GetServeType(1, 4);
+            
+            foreach (var serveType in _serveTypes.Values)
+            {
+                if (serveType.Score > bestServe.Score && serveType.AceCount + serveType.GoodCount + serveType.BadCount + serveType.MistakeCount != 0)
+                {
+                    bestServe = serveType;
+                }
+                if (serveType.Score < worstServe.Score && serveType.AceCount + serveType.GoodCount + serveType.BadCount + serveType.MistakeCount != 0)
+                {
+                    worstServe = serveType;
                 }
             }
+            
+            serveAnalysisArr[0] = bestServe.ToString();
+            serveAnalysisArr[1] = worstServe.ToString();
+            return serveAnalysisArr;
         }
         
         // For debugging only
-        /*
         public void DisplayStatistics()
         {
             foreach (var serveType in _serveTypes.Values)
@@ -103,11 +134,9 @@
                 Console.WriteLine(serveType);
             }
         }
-        */
-        
     }
     
-     public class ReceiveType
+    public class ReceiveType
     {
         public int Position { get; }
 
@@ -181,26 +210,23 @@
         {
             ReceiveType receiveType = GetReceiveType(position);
             Console.WriteLine($"Recording receive: Position = {position}, Outcome={outcome}");
-
-            if (receiveType != null)
+            
+            switch (outcome)
             {
-                if (outcome.Equals("3"))
-                {
+                case "3":
                     receiveType.RecordGreat();
-                }
-                else if (outcome.Equals("2"))
-                {
+                    break;
+                case "2":
                     receiveType.RecordGood();
-                }
-                else if (outcome.Equals("1"))
-                {
+                    break;
+                case "1":
                     receiveType.RecordBad();
-                }
-                else if (outcome.Equals("0"))
-                {
+                    break;
+                case "0":
                     receiveType.RecordFail();
-                }
+                    break;
             }
+
         }
         
         // For debugging only
@@ -218,11 +244,6 @@
 
     class Program
     {
-        public static string Username = "Karch Kiraly";
-        public static string Manual = File.ReadAllText("manual.txt");
-        public static ServeStatistics StatisticsSe = new ServeStatistics();
-        public static ReceiveStatistics StatisticsRe = new ReceiveStatistics();
-
         public static void WelcomeMessage()
         {
             string welcome = "Vitejte v aplikaci BeachStats!";
@@ -270,7 +291,7 @@
                         }
                         else
                         {
-                            Username = logUsername;
+                            GlobalVariables.Username = logUsername;
                         }
                     } while (!Directory.Exists(expectedUserPath));
                     
@@ -282,18 +303,30 @@
                 {
                     MakeBox("Zahajili jste REGISTRACI\nnapiste jmeno hrace pro ktereho chcete statistiku tvorit\nstisknete ENTER pro potvrzeni");
                     string regUsername;
+                    bool b = false;
                     do
                     {
+                        b = false;
                         regUsername = Console.ReadLine();
+                        if (regUsername.Contains("/") || regUsername.Contains("\\"))
+                        {
+                            MakeBox("Nazev nesmi obsahovat lomeno, zkuste znovu");
+                        }
+                        else
+                        {
+                            b = true;
+                        }
+                        
                         if (regUsername == "")
                         {
                             MakeBox("Nebylo zadano zadne jmeno, zkuste znovu");
                         }
-                        else
+
+                        if (regUsername != "" && b)
                         {
-                            Username = regUsername;
+                            GlobalVariables.Username = regUsername;
                         }
-                    } while (regUsername == "");
+                    } while (regUsername == "" || b == false);
                     
                     Directory.CreateDirectory(Directory.GetCurrentDirectory() + "\\" + regUsername);
                     MakeBox("Uzivatel uspesne vytvoren");
@@ -379,11 +412,35 @@
         public static void NewData(bool serve, bool receive, bool attack)
         {
             MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu yyyymmdd\nPriklad: datum 26.9.1994, napiste: 19940926");
-            string matchDate = Console.ReadLine();
+            bool b;
+            string matchDate;
+            do
+            {
+                matchDate = Console.ReadLine();
+                b = Int32.TryParse(matchDate, out int i);
+                if (b == false)
+                {
+                    MakeBox("Zadali jste spatny format data, zkuste znovu");
+                }
+            } while (b != true);
             
-            MakeBox("Zadejte název zápasu a stiskněte ENTER");
-            string matchName = Console.ReadLine();
-            File.WriteAllText(Username + "/" + matchName + ".txt", matchDate + "\n");
+            MakeBox("Zadejte název zápasu a stiskněte ENTER\n\nNazev nesmi obsahovat lomeno / a zpetne lomeno \\");
+            string matchName;
+            bool b2 = false;
+            do
+            {
+                matchName = Console.ReadLine();
+                if (matchName.Contains("/") || matchName.Contains("\\"))
+                {
+                    MakeBox("Nazev nesmi obsahovat lomeno, zkuste znovu");
+                }
+                else
+                {
+                    b2 = true;
+                }
+            } while (b2 != true);
+            
+            File.WriteAllText(GlobalVariables.Username + "/" + matchDate + " - " + matchName + ".txt", "");
             
             bool normalOrientation = true;
             MakeBox("Zacina vas tym na blizsi nebo vzdalenejsi strane? Stisknete B pro blizsi nebo V pro vzdalenejsi");
@@ -436,7 +493,7 @@
                         EnterAttackStats(normalOrientation);
                         break;
                     case ConsoleKey.H:
-                        MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat\n" + serveText + receiveText + attackText + Manual);
+                        MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat\n" + serveText + receiveText + attackText + GlobalVariables.Manual);
                         break;
                     case ConsoleKey.Enter:
                         exitNow = true;
@@ -446,6 +503,9 @@
                         break;
                 }
             }
+
+            string[] serveAnalysis = GlobalVariables.StatisticsSe.ServeAnalysis();
+            File.AppendAllText(GlobalVariables.Username + "/" + matchName + ".txt", "Best Serve:\n" + serveAnalysis[0] + "\nWorst Serve:\n" + serveAnalysis[1]);
         }
         
         public static void EnterServeStats(bool normalOrientation)
@@ -564,7 +624,10 @@
                     outcome = "3";
                     break;
             }
-            StatisticsSe.RecordServe(startPosition, endPosition, outcome);
+            GlobalVariables.StatisticsSe.RecordServe(startPosition, endPosition, outcome);
+            Console.WriteLine();
+            MakeBox("Jaky je dalsi uder?");
+
         }
 
         public static void EnterReceiveStats(bool normalOrientation)
@@ -674,21 +737,24 @@
                     outcome = "3";
                     break;
             }
-            StatisticsRe.RecordReceive(position, outcome);
+            GlobalVariables.StatisticsRe.RecordReceive(position, outcome);
+            Console.WriteLine();
+            MakeBox("Jaky je dalsi uder?");
         }
 
         public static void EnterAttackStats(bool normalOrientation)
         {
             // To-do
         }
-    
+        
         public static void Main(string[] args)
         {
-            // WelcomeMessage(); // Line 8
-            // LoginAndRegister(); // Line 18
+            WelcomeMessage(); // Line 8
+            LoginAndRegister(); // Line 18
             Menu(); // Line 97
-            // StatisticsSe.DisplayStatistics(); // Debugging
-            // StatisticsRe.DisplayStatistics(); // Debugging
+            // GlobalVariables.StatisticsSe.DisplayStatistics(); // Debugging
+            // GlobalVariables.StatisticsRe.DisplayStatistics(); // Debugging
+            
         }
     }
 }

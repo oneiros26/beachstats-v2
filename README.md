@@ -2,8 +2,8 @@
 C# console application for beach volleyball statistics
 
 # To-do:
- - user can put / into name and ruin paths
  - user can rewrite files with same match names
  - attack statistics
- - writeout statistics
- - automatic data-analysis
+ - write out statistics for receive and attack 
+ - automatic data-analysis for receive and attack
+ - if user uses only 1 type of serve, analysis does not work
