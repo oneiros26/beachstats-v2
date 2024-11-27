@@ -6,6 +6,7 @@
         public static string Manual = File.ReadAllText("manual.txt");
         public static ServeStatistics StatisticsSe = new ServeStatistics();
         public static ReceiveStatistics StatisticsRe = new ReceiveStatistics();
+        public static string ServeManual = File.ReadAllText("serve_manual.txt");
     }
     
     public class ServeType
@@ -256,14 +257,14 @@
 
         public static void LoginAndRegister()
         {
-            MakeBox("Stisknete “P” pro přihlášení nebo “R” pro registraci");
+            MakeBox("(P) : Prihlaseni\n(R) : Registrace");
             while (true)
             {
                 ConsoleKeyInfo keyPress = Console.ReadKey();
 
                 if (keyPress.Key == ConsoleKey.P)
                 {
-                    MakeBox("Zahajili jste PRIHLASENI\nnapiste jmeno hrace pro ktereho chcete statistiku tvorit");
+                    MakeBox("Zahajili jste PRIHLASENI\nnapiste jmeno hrace pro ktereho chcete statistiku tvorit\n\n(Z) : Zpet");
                     string expectedUserPath;
                     
                     do
@@ -335,6 +336,22 @@
                 }
             }
         }
+
+        public static void Tutorial()
+        {
+            MakeBox("Nyni probehne TUTORIAL\n\n(ENTER) : Spustit tutorial\n(P) : Preskocit");
+            ConsoleKeyInfo keyPress = Console.ReadKey();
+            if (keyPress.Key == ConsoleKey.P)
+            {
+                Menu();
+            }
+            if (keyPress.Key == ConsoleKey.Enter)
+            {
+                MakeBox("Tutorial zahajen!\n\nZacneme podanim:" + GlobalVariables.ServeManual);
+            }
+            MakeBox("Nyni si vase ziskane znalosti ozkousime.\n(ENTER) : Pokracovat");
+            // To - Do
+        }
         
         public static void MakeBox(string s)
         {
@@ -354,7 +371,7 @@
 
         public static void Menu()
         {
-            MakeBox("Stisknete \"N\" pro nový záznam nebo \"S\" pro statistiky\n\nstisknutím “Z” se vrátíte zpět");
+            MakeBox("(N) : Novy zaznam\n(S) : Statistiky\n(Z) : Zpet");
             while (true) 
             {
                 ConsoleKeyInfo keyPress = Console.ReadKey();
@@ -385,7 +402,7 @@
             
             do
             {
-                MakeBox("Zahajili jste NOVY ZAZNAM\nstisknete vsechna cisla pro ktere chcete udelat statistiku\n\n1. Podani - " + serve.ToString() + "\n2. Prijem - " + receive.ToString() + "\n3. Utok - " + attack.ToString() + "\n\nAz budete spokojeni stisknete ENTER");
+                MakeBox("Zahajili jste NOVY ZAZNAM\nstisknete vsechna cisla pro ktere chcete udelat statistiku\n\n(1) : Podani - " + serve.ToString() + "\n(2) : Prijem - " + receive.ToString() + "\n(3) : Utok - " + attack.ToString() + "\n\n\n(H) : HOTOVO");
                 ConsoleKeyInfo keyPress = Console.ReadKey();
                 
                 switch (keyPress.KeyChar) 
@@ -411,20 +428,12 @@
         
         public static void NewData(bool serve, bool receive, bool attack)
         {
-            MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu yyyymmdd\nPriklad: datum 26.9.1994, napiste: 19940926");
-            bool b;
-            string matchDate;
-            do
-            {
-                matchDate = Console.ReadLine();
-                b = Int32.TryParse(matchDate, out int i);
-                if (b == false)
-                {
-                    MakeBox("Zadali jste spatny format data, zkuste znovu");
-                }
-            } while (b != true);
+            MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu yyyy.mmd.d\nPriklad: datum 26.9.1994, napiste: 1994.09.26");
             
-            MakeBox("Zadejte název zápasu a stiskněte ENTER\n\nNazev nesmi obsahovat lomeno / a zpetne lomeno \\");
+            string matchDate;
+            matchDate = Console.ReadLine();
+            
+            MakeBox("Zadejte název zápasu\n\nNazev nesmi obsahovat lomeno / a zpetne lomeno \\");
             string matchName;
             bool b2 = false;
             do
@@ -442,8 +451,8 @@
             
             File.WriteAllText(GlobalVariables.Username + "/" + matchDate + " - " + matchName + ".txt", "");
             
-            bool normalOrientation = true;
-            MakeBox("Zacina vas tym na blizsi nebo vzdalenejsi strane? Stisknete B pro blizsi nebo V pro vzdalenejsi");
+            bool orientation = true; // When orientation is true, the team is closer to you
+            MakeBox("Zacina vas tym na blizsi nebo vzdalenejsi strane?\n\n(B) : Blizsi\n(V) : Vzdalenejsi");
             while (true)
             {
                 ConsoleKeyInfo whichSide = Console.ReadKey();
@@ -454,7 +463,7 @@
 
                 if (whichSide.Key == ConsoleKey.V)
                 {
-                    normalOrientation = false;
+                    orientation = false;
                     break;
                 }
             }
@@ -466,31 +475,31 @@
             
             if (serve)
             {
-                serveText = "\nS - servis";
+                serveText = "\n(S) : Servis";
             }
             if (receive)
             {
-                receiveText = "\nP - prijem";
+                receiveText = "\n(P) : Prijem";
             }
             if (attack)
             {
-                attackText = "\nU - utok";
+                attackText = "\n(U) : Utok";
             }
             
-            MakeBox("KDYBYSTE KDYKOLIV POTREBOVALI MANUAL STISNEKTE \"H\" JAKO HELP\n\nStisknete pismeno podle typu uderu ktery chcete sledovat\nStisknete O jako otocit orientaci kdyz se meni strany\n" + serveText + receiveText + attackText);
+            MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat" + serveText + receiveText + attackText + "\n\n(M) : Manual\n(0) : Zmena stran");
             while (exitNow == false)
             {
                 ConsoleKeyInfo keyPress = Console.ReadKey();
                 switch (keyPress.Key) 
                 {
                     case ConsoleKey.S:
-                        EnterServeStats(normalOrientation);
+                        EnterServeStats(orientation);
                         break;
                     case ConsoleKey.P:
-                        EnterReceiveStats(normalOrientation);
+                        EnterReceiveStats(orientation);
                         break;
                     case ConsoleKey.U:
-                        EnterAttackStats(normalOrientation);
+                        EnterAttackStats(orientation);
                         break;
                     case ConsoleKey.H:
                         MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat\n" + serveText + receiveText + attackText + GlobalVariables.Manual);
@@ -499,7 +508,7 @@
                         exitNow = true;
                         break;
                     case ConsoleKey.O:
-                        normalOrientation = !normalOrientation;
+                        orientation = !orientation;
                         break;
                 }
             }
@@ -514,7 +523,7 @@
             int endPosition = 0;
             string outcome = "";
             
-            MakeBox("Odkud podava?");
+            MakeBox("Odkud podava?\n\n(1) : Vlevo\n(2) : Uprostred\n(3) : Vpravo");
             ConsoleKeyInfo keyPress = Console.ReadKey();
             switch (keyPress.KeyChar)
             {
@@ -542,7 +551,7 @@
                     }
                     break;
             }
-            MakeBox("Kam balon dopadl?");
+            MakeBox("Kam balon dopadl?" + File.ReadAllText("numpad_reminder.txt"));
             ConsoleKeyInfo keyPress2 = Console.ReadKey();
             switch (keyPress2.KeyChar)
             {
@@ -607,7 +616,7 @@
                     }
                     break;
             }
-            MakeBox("Jak servis dopadl?");
+            MakeBox("Jak servis dopadl?\n\n(0) : Out\n(1) : Spatny\n(2) : Dobry\n(3) : Eso");
             ConsoleKeyInfo keyPress3 = Console.ReadKey();
             switch (keyPress3.KeyChar)
             {
@@ -626,8 +635,6 @@
             }
             GlobalVariables.StatisticsSe.RecordServe(startPosition, endPosition, outcome);
             Console.WriteLine();
-            MakeBox("Jaky je dalsi uder?");
-
         }
 
         public static void EnterReceiveStats(bool normalOrientation)
@@ -635,7 +642,7 @@
             int position = 0;
             string outcome = "";
             
-            MakeBox("Kde prijima?");
+            MakeBox("Kde prijima?" + File.ReadAllText("numpad_reminder.txt"));
             ConsoleKeyInfo keyPress = Console.ReadKey();
             switch (keyPress.KeyChar)
             {
@@ -720,7 +727,7 @@
                     }
                     break;
             }
-            MakeBox("Jak prijem dopadl?");
+            MakeBox("Jak prijem dopadl?\n\n(0) : Eso\n(1) : Spatny\n(2) : Dobry\n(3) : Perfektni");
             ConsoleKeyInfo keyPress2 = Console.ReadKey();
             switch (keyPress2.KeyChar)
             {
@@ -739,7 +746,6 @@
             }
             GlobalVariables.StatisticsRe.RecordReceive(position, outcome);
             Console.WriteLine();
-            MakeBox("Jaky je dalsi uder?");
         }
 
         public static void EnterAttackStats(bool normalOrientation)
@@ -751,6 +757,7 @@
         {
             WelcomeMessage(); // Line 8
             LoginAndRegister(); // Line 18
+            Tutorial();
             Menu(); // Line 97
             // GlobalVariables.StatisticsSe.DisplayStatistics(); // Debugging
             // GlobalVariables.StatisticsRe.DisplayStatistics(); // Debugging
