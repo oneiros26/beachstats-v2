@@ -889,13 +889,10 @@
 
         public static void Main(string[] args)
         {
-            /*
             WelcomeMessage(); // Line 8
             LoginAndRegister(); // Line 18
             Tutorial();
             Menu(); // Line 97
-            */
-            Tutorial();
             // GlobalVariables.StatisticsSe.DisplayStatistics(); // Debugging
             // GlobalVariables.StatisticsRe.DisplayStatistics(); // Debugging
         }
