@@ -485,6 +485,7 @@
                 if (keyPress.Key == ConsoleKey.S)
                 {
                     // To-do
+                    Console.WriteLine("Statistics are coming soon!");
                     break;
                 }
 
@@ -508,7 +509,7 @@
                 MakeBox(
                     "Zahajili jste NOVY ZAZNAM\nstisknete vsechna cisla pro ktere chcete udelat statistiku\n\n(1) : Podani - " +
                     serve.ToString() + "\n(2) : Prijem - " + receive.ToString() + "\n(3) : Utok - " +
-                    attack.ToString() + "\n\n\n(H) : HOTOVO");
+                    attack.ToString() + "\n\n\n(ENTER) : POKRACOVAT");
                 ConsoleKeyInfo keyPress = Console.ReadKey();
 
                 switch (keyPress.KeyChar)
@@ -535,11 +536,19 @@
 
         public static void NewData(bool serve, bool receive, bool attack)
         {
-            MakeBox(
-                "Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu yyyy.mmd.d\nPriklad: datum 26.9.1994, napiste: 1994.09.26");
-
-            string matchDate;
-            matchDate = Console.ReadLine();
+            MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu dd.mm.yyyy\nPriklad datumu: 26.9.1994");
+            bool b = false;
+            DateTime matchDate;
+            do
+            {
+                string matchDateStr = Console.ReadLine();
+                b = DateTime.TryParse(matchDateStr, out matchDate);
+                if (b == false)
+                {
+                    Console.WriteLine("Spatny format, prosim zkuste znovu:");
+                }
+                
+            } while (b != true);
 
             MakeBox("Zadejte název zápasu\n\nNazev nesmi obsahovat lomeno / a zpetne lomeno \\");
             string matchName;
