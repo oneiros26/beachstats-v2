@@ -132,6 +132,7 @@
         }
 
         // For debugging only
+        /*
         public void DisplayStatistics()
         {
             foreach (var serveType in _serveTypes.Values)
@@ -139,6 +140,7 @@
                 Console.WriteLine(serveType);
             }
         }
+        */
     }
 
     public class ReceiveType
@@ -149,6 +151,8 @@
         public int GoodCount { get; private set; }
         public int BadCount { get; private set; }
         public int FailCount { get; private set; }
+        
+        public int Score { get; private set; }
 
         public ReceiveType(int position)
         {
@@ -158,21 +162,25 @@
         public void RecordGreat()
         {
             GreatCount++;
+            Score = Score + 2;
         }
 
         public void RecordGood()
         {
             GoodCount++;
+            Score = Score + 1;
         }
 
         public void RecordBad()
         {
             BadCount++;
+            Score = Score - 1;
         }
 
         public void RecordFail()
         {
             FailCount++;
+            Score = Score - 2;
         }
 
         public override string ToString()
@@ -229,6 +237,31 @@
                     receiveType.RecordFail();
                     break;
             }
+        }
+        public string[] ReceiveAnalysis()
+        {
+            string[] receiveAnalysisArr = new string[2];
+            ReceiveType bestReceive = GetReceiveType(2);
+            ReceiveType worstReceive = GetReceiveType(2);
+
+            foreach (var receiveType in _receiveTypes.Values)
+            {
+                if (receiveType.Score > bestReceive.Score && receiveType.GreatCount + receiveType.GoodCount + receiveType.BadCount +
+                    receiveType.FailCount != 0)
+                {
+                    bestReceive = receiveType;
+                }
+
+                if (receiveType.Score < worstReceive.Score && receiveType.GreatCount + receiveType.GoodCount + receiveType.BadCount +
+                    receiveType.FailCount != 0)
+                {
+                    worstReceive = receiveType;
+                }
+            }
+
+            receiveAnalysisArr[0] = bestReceive.ToString();
+            receiveAnalysisArr[1] = worstReceive.ToString();
+            return receiveAnalysisArr;
         }
 
         // For debugging only
@@ -536,13 +569,13 @@
 
         public static void NewData(bool serve, bool receive, bool attack)
         {
-            MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu dd.mm.yyyy\nPriklad datumu: 26.9.1994");
+            MakeBox("Byla zahajena NOVA STATISTIKA\n\nProsim zadejte datum ve formatu dd.mm.yyyy\nPriklad datumu: 26.09.1994");
             bool b = false;
             DateTime matchDate;
             do
             {
-                string matchDateStr = Console.ReadLine();
-                b = DateTime.TryParse(matchDateStr, out matchDate);
+                string matchDateRaw = Console.ReadLine();
+                b = DateTime.TryParse(matchDateRaw, out matchDate);
                 if (b == false)
                 {
                     Console.WriteLine("Spatny format, prosim zkuste znovu:");
@@ -565,8 +598,9 @@
                     b2 = true;
                 }
             } while (b2 != true);
-
-            File.WriteAllText(GlobalVariables.Username + "/" + matchDate + " - " + matchName + ".txt", "");
+            
+            
+            File.WriteAllText(GlobalVariables.Username + "/" + matchDate.ToString("yyy-MM-dd") + " - " + matchName + ".txt", "");
 
             bool orientation = true; // When orientation is true, the team is closer to you
             MakeBox("Zacina vas tym na blizsi nebo vzdalenejsi strane?\n\n(B) : Blizsi\n(V) : Vzdalenejsi");
@@ -604,11 +638,10 @@
             {
                 attackText = "\n(U) : Utok";
             }
-
-            MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat" + serveText + receiveText + attackText +
-                    "\n\n(M) : Manual\n(0) : Zmena stran");
+            
             while (exitNow == false)
             {
+                MakeBox("Stisknete pismeno podle typu uderu ktery chcete sledovat" + serveText + receiveText + attackText + "\n\n(M) : Manual\n(0) : Zmena stran");
                 ConsoleKeyInfo keyPress = Console.ReadKey();
                 switch (keyPress.Key)
                 {
@@ -635,8 +668,12 @@
             }
 
             string[] serveAnalysis = GlobalVariables.StatisticsSe.ServeAnalysis();
-            File.AppendAllText(GlobalVariables.Username + "/" + matchName + ".txt",
-                "Best Serve:\n" + serveAnalysis[0] + "\nWorst Serve:\n" + serveAnalysis[1]);
+            File.AppendAllText(GlobalVariables.Username + "/" + matchDate.ToString("yyy-MM-dd") + " - " + matchName + ".txt", "Best Serve:\n" + serveAnalysis[0] + "\nWorst Serve:\n" + serveAnalysis[1]);
+
+            File.AppendAllText(GlobalVariables.Username + "/" + matchDate.ToString("yyy-MM-dd") + " - " + matchName + ".txt", "\n");
+            
+            string[] receiveAnalysis = GlobalVariables.StatisticsRe.ReceiveAnalysis();
+            File.AppendAllText(GlobalVariables.Username + "/" + matchDate.ToString("yyy-MM-dd") + " - " + matchName + ".txt", "Best Receive:\n" + receiveAnalysis[0] + "\nWorst Receive:\n" + receiveAnalysis[1]);
         }
 
         public static void EnterServeStats(bool normalOrientation)

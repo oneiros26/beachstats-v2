@@ -6,15 +6,23 @@ Vsechny statistiky se ovladaji pomoci numpadu.
      _______________________
     |       |       |       |
     |       |       |       |
+    |       |       |       |
+    |       |       |       |
     |_______|_______|_______|
+    |       |       |       |
+    |       |       |       |
     |       |       |       |
     |       |       |       |
     |_______|_______|_______|
  ______________________________ ZDE JE SIT
      _______________________
     |       |       |       |
+    |   1   |   2   |   3   |
+    |       |       |       |
     |       |       |       |
     |_______|_______|_______|
+    |       |       |       |
+    |       |       |       |
     |       |       |       |
     |       |       |       |
   __|_______|_______|_______|__ ZDE JE ZADNI LAJNA
@@ -32,15 +40,23 @@ Vsechny statistiky se ovladaji pomoci numpadu.
      _______________________
     |       |       |       |
     |   7   |   8   |   9   |
+    |       |       |       |
+    |       |       |       |
     |_______|_______|_______|
     |       |       |       |
     |   4   |   5   |   6   |
+    |       |       |       |
+    |       |       |       |
     |_______|_______|_______|
  ______________________________ ZDE JE SIT
      _______________________
     |       |       |       |
     |       |       |       |
+    |       |       |       |
+    |       |       |       |
     |_______|_______|_______|
+    |       |       |       |
+    |       |       |       |
     |       |       |       |
     |       |       |       |
     |_______|_______|_______|
@@ -54,7 +70,11 @@ Ukazka:
   __|_______|_______|_______|__ ZDE JE ZADNI LAJNA
     |       |       |       |
     |       |       |       |
+    |       |       |       |
+    |       |       |       |
     |_______|_______|_______|
+    |       |       |       |
+    |       |       |       |
     |       |       |       |
     |       |       |       |
     |_______|_______|_______|
@@ -62,9 +82,13 @@ Ukazka:
      _______________________
     |       |       |       |
     |   7   |   8   |   9   |
+    |       |       |       |
+    |       |       |       |
     |_______|_______|_______|
     |       |       |       |
     |   4   |   5   |   6   |
+    |       |       |       |
+    |       |       |       |
     |_______|_______|_______|
 
 3) HODNOCENI PODANI - pomoci numpadovych klaves 0, 1, 2 a 3
@@ -73,17 +97,32 @@ Ukazka:
 1 = Normal (normalni prijem)
 0 = Zkazene podani
 
-4) HODNOCENI PRIJMU - opet pomoci numpadovych klaves 0, 1, 2 a 3
+4) POZICE PRIJMU - pomoci numpadovych klaves 1 - 9
+- nyni nejde vubec o misto na kurtu, ale a pozici kam leti mic vuci tomu kde prijimajici zacina
+- prijimajici je X na vasem numpadu cislo 5
+
+     _______________________
+    |       |       |       |
+    |   7   |   8   |   9   |
+    |_______|_______|_______|
+    |       |       |       |
+    |   4   |   X   |   6   |
+    |_______|_______|_______|
+    |       |       |       |
+    |   1   |   2   |   3   |
+    |_______|_______|_______|
+
+5) HODNOCENI PRIJMU - opet pomoci numpadovych klaves 0, 1, 2 a 3
 3 = Nejlepsi (lze nahrat v klidu prstama)
 2 = Dobry (nahravac uz musi bezet)
 1 = Spatny (nahravac uz pouze spravuje, neda se dat hezka nahra)
 0 = Dostal eso
 
-5) TYP UTOKU - pomoci pismen L a S
+6) TYP UTOKU - pomoci pismen L a S
 L = Lob (kopecek)
 S = Smec (tvrdy uder)
 
-6) HODNOCENI UTOKU - pomoci numpadovych klaves 0, 1, 2 a 3
+7) HODNOCENI UTOKU - pomoci numpadovych klaves 0, 1, 2 a 3
 3 = Nejlepsi (rovnou na zem / polar odpalil mic pryc)
 2 = Dobry (polar jen tak tak zvedl uder, vraci mic zadarmo zpet)
 1 = Spatny (polar capl tak ze muze utocit zpet)

@@ -1,32 +1,19 @@
 
 
-Prijem je velmi podobny jako podani (protoze na podani zavisi). 
-Nejdriv stisknete kde dotycny prijima (kam dopadlo podani, odkud letelo neni dulezite)
-Stejne jako predtim pouzijete numpad:
+1) POZICE PRIJMU - pomoci numpadovych klaves 1 - 9
+- nyni nejde vubec o misto na kurtu, ale a pozici kam leti mic vuci tomu kde prijimajici zacina
+- prijimajici je X na vasem numpadu cislo 5
 
-1) MISTO DOPADU SERVISU - pomoci numpadovych klaves 4, 5, 6, 7, 8 a 9
-4 = Vlevo vpredu
-5 = Uprostred vpredu
-6 = Vpravo vpredu
-7 = Vlevo vzadu
-8 = Uprostred vzadu
-9 = Vpravo vzadu
      _______________________
     |       |       |       |
     |   7   |   8   |   9   |
     |_______|_______|_______|
     |       |       |       |
-    |   4   |   5   |   6   |
-    |_______|_______|_______|
- ______________________________ ZDE JE SIT
-     _______________________
-    |       |       |       |
-    |       |       |       |
+    |   4   |   X   |   6   |
     |_______|_______|_______|
     |       |       |       |
-    |       |       |       |
+    |   1   |   2   |   3   |
     |_______|_______|_______|
-_______________________________ ODSUD SE PODAVA
 
 
 2) HODNOCENI PRIJMU - pomoci numpadovych klaves 0, 1, 2, 3
